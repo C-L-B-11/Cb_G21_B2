@@ -145,7 +145,7 @@ pub enum C1Token {
     // it can be named anything you wish.
     #[regex(r"/\*[^(\*/)]*\*/", logos::skip)]
     #[regex("//[^\\n]*\\n", logos::skip)]
-    #[regex(r"[ \n\t\f]+", logos::skip)]
+    #[regex(r"[ \n\t\f\r]+", logos::skip)]
     #[error]
     Error,
 }
