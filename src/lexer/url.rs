@@ -27,20 +27,11 @@ impl Display for LinkText {
 #[derive(Logos, Debug, PartialEq)]
 pub enum URLToken {
     // TODO: Capture link definitions
-    #[regex(".|ä|Ä|ö|Ö|ü|Ü|\n|ß|\n|<|>",extract_link_info)]
-    //#[regex("<a[^<]*href=[^<]*>[^<]*<",extract_link_info)]
-    #[regex("<a[^<]*<",extract_link_info)]
+    #[regex("href=\"[^<]*<",extract_link_info)]
     Link((LinkUrl, LinkText)),
 
-    //#[regex("|.|ä|Ä|ö|Ö|ü|Ü|\n|ß|\n")]
-    //Test,
-    
-    // TODO: Ignore all characters that do not belong to a link definition
-    //#[regex(".")]
-    //#[regex("ä|Ä|ö|Ö|ü|Ü|\n|ß")]
-    ignore,
-
     // Catch any error
+    #[regex(".|ä|Ä|ö|Ö|ü|Ü|\n|ß|\n|<|>", logos::skip)]
     #[error]
     Error,
 }
@@ -48,20 +39,14 @@ pub enum URLToken {
 /// Extracts the URL and text from a string that matched a Link token
 fn extract_link_info(lex: &mut Lexer<URLToken>) -> (LinkUrl, LinkText) {
     let slice =lex.slice();
-    let input :String = slice[..slice.len()].to_string();
-    /*let input: String = slice[..slice.len() - 1].to_string();
-    let index1 = input.find("href=\"").unwrap();
-    let input2: String = input[index1+6..].to_string();
-    let index2= input.find("\"").unwrap();
+    let input: String = slice[..slice.len() - 1].to_string();
+    let input2: String = input[6..].to_string();
+    let index2= input2.find("\"").unwrap();
     let linkurl: String = input2[0..index2].to_string();
     let index3 = input2.find(">").unwrap();
-    let linktext: String = input2[index3+1..].to_string();*/
+    let linktext: String = input2[index3+1..].to_string();
 
-    
-    (LinkUrl(input),LinkText("Das ist ein Text".to_string()))
-
-    
-    // TODO: Implement extraction from link definition
-    //todo!()
+    (LinkUrl(linkurl),LinkText(linktext))
 }
+
 
