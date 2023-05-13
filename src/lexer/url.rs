@@ -30,8 +30,10 @@ pub enum URLToken {
     #[regex("href=\"[^<]*<",extract_link_info)]
     Link((LinkUrl, LinkText)),
 
-    // Catch any error
     #[regex(".|ä|Ä|ö|Ö|ü|Ü|\n|ß|\n|<|>", logos::skip)]
+    Ignored,
+
+    // Catch any error    
     #[error]
     Error,
 }
